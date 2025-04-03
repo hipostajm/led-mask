@@ -35,14 +35,12 @@ class Matrix:
         GPIO.output(self.pins.d, d_bit)
     
     def _set_color_top(self, color): #the top leyer of matrix
-        #time.sleep(delay)
         red, green, blue, x = self._bits_from_int(color) # x is not used
         GPIO.output(self.pins.red0, red)
         GPIO.output(self.pins.green0, green)
         GPIO.output(self.pins.blue0, blue)
 
-    def _set_color_bottom(self, color): #the top leyer of matrix
-        #time.sleep(delay)
+    def _set_color_bottom(self, color): #the bottom leyer of matrix
         red, green, blue, x = self._bits_from_int(color) # x is not used
         GPIO.output(self.pins.red1, red)
         GPIO.output(self.pins.green1, green)
@@ -55,8 +53,8 @@ class Matrix:
             self._set_row(row)
             #time.sleep(delay)
             for col in range(self.pixels.width):
-                self._set_color_top(self.pixels.get_pixel(row,col))
-                self._set_color_bottom(self.pixels.get_pixel(row+self.pixels.hight//2,col))
+                self._set_color_top(self.pixels.get_pixel(col,row))
+                self._set_color_bottom(self.pixels.get_pixel(col,row+self.pixels.hight//2))
                 self._clock()
             #GPIO.output(oe_pin, 0)
             self._latch()
