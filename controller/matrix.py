@@ -1,15 +1,16 @@
-from pixels import Pixels
-from pins import Pins
+from controller.pixels import Pixels
+from controller.pins import Pins
 import RPi.GPIO as GPIO
 import time
 
 class Matrix:
-    def __init__(self, pixels: Pixels, pins: Pins, delay: int = 0.000001):
-        self.pixels = pixels
-        self.pins = pins
-        self.delay = delay
+    def __init__(self, pixels: Pixels, pins: Pins, delay: int|float = 0.000001):
+        self.pixels: Pixels = pixels
+        self.pins: Pins = pins
+        self.delay: int|float = delay
 
         GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
         GPIO.setup(tuple(pins.__dict__.values()), GPIO.OUT)
 
     def _clock(self):
@@ -46,17 +47,20 @@ class Matrix:
         GPIO.output(self.pins.green1, green)
         GPIO.output(self.pins.blue1, blue)
 
-    def refresh(self):
+    def _refresh(self):
         for row in range(self.pixels.hight//2):
             GPIO.output(self.pins.oe, 1)
             self._set_color_top(0)
             self._set_row(row)
-            #time.sleep(delay)
             for col in range(self.pixels.width):
                 self._set_color_top(self.pixels.get_pixel(col,row))
                 self._set_color_bottom(self.pixels.get_pixel(col,row+self.pixels.hight//2))
                 self._clock()
-            #GPIO.output(oe_pin, 0)
             self._latch()
             GPIO.output(self.pins.oe, 0)
             time.sleep(self.delay)
+    
+    def run(self, condiction = True):
+        while condiction:
+            self._refresh()
+

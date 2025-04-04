@@ -1,7 +1,7 @@
 class Pixels:
-    def __init__(self, width: int , hight: int, initial_value: int):
-        self.hight = hight
-        self.width = width
+    def __init__(self, width: int = 64, hight: int = 32, initial_value: int = 0):
+        self.hight: int = hight
+        self.width: int = width
 
         self.pixels = [[initial_value]*width for _ in range(hight)]
     
@@ -11,3 +11,5 @@ class Pixels:
     def get_pixel(self, x: int, y: int):
         return self.pixels[y][x]
         
+    def change_all(self, new_pixels: list):
+        self.pixels = new_pixels
