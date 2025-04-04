@@ -1,5 +1,5 @@
-from controller.pixels import Pixels
-from controller.pins import Pins
+from pixels import Pixels
+from pins import Pins
 import RPi.GPIO as GPIO
 import time
 

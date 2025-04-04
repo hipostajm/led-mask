@@ -1,7 +1,7 @@
 import threading
-from controller.pins import Pins
-from controller.pixels import Pixels
-from controller.matrix import Matrix
+from pins import Pins
+from pixels import Pixels
+from matrix import Matrix
 import time
 
 width, hight = 64, 32
@@ -14,8 +14,8 @@ a = True
 
 threading.Thread(target=matrix.run, args=a).start()
 
-for i in width:
-    time.sleep(0.25)
+for i in range(width):
+    time.sleep(0.05)
     pixels.set_pixel(i, 1, 7)
     pixels.set_pixel(i, 3, 7)
 
