@@ -10,3 +10,6 @@ def get():
         time.sleep(0.05)
         pixels.set_pixel(i, 10, 7)
         pixels.set_pixel(i, 30, 7)
+
+if __name__ == "__main__":
+    app.run()
