@@ -12,12 +12,4 @@ matrix = Matrix(pixels, pins)
 
 a = True
 
-threading.Thread(target=matrix.run, args=a).start()
-
-for i in range(width):
-    time.sleep(0.05)
-    pixels.set_pixel(i, 1, 7)
-    pixels.set_pixel(i, 3, 7)
-
-time.sleep(5)
-a = False
+threading.Thread(target=matrix.run, args=(a,)).start()
