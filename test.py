@@ -32,7 +32,7 @@ def flatter(pixels, width, height):
             minimal = math.inf
             picked_color = 0
             for i, color in enumerate(colors):
-                distance = math.sqrt((color[0]-pixels[y][x][0])**2+(color[1]-pixels[y][x][w1])**2+(color[2]-pixels[y][x][2])**2)
+                distance = math.sqrt((color[0]-pixels[y][x][0])**2+(color[1]-pixels[y][x][1])**2+(color[2]-pixels[y][x][2])**2)
                 if distance < minimal:
                     minimal = distance
                     picked_color = i

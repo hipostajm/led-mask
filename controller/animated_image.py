@@ -12,3 +12,5 @@ class AnimatedImage():
             for frame in self.frames:
                 time.sleep(self.delay)     
                 pixels.set_all(frame)
+                if not condictional.condiction:
+                    break
