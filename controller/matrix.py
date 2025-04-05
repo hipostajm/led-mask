@@ -49,13 +49,13 @@ class Matrix:
         GPIO.output(self.pins.blue1, blue)
 
     def _refresh(self):
-        for row in range(self.pixels.hight//2):
+        for row in range(self.pixels.height//2):
             GPIO.output(self.pins.oe, 1)
             self._set_color_top(0)
             self._set_row(row)
             for col in range(self.pixels.width):
                 self._set_color_top(self.pixels.get_pixel(col,row))
-                self._set_color_bottom(self.pixels.get_pixel(col,row+self.pixels.hight//2))
+                self._set_color_bottom(self.pixels.get_pixel(col,row+self.pixels.height//2))
                 self._clock()
             self._latch()
             GPIO.output(self.pins.oe, 0)
