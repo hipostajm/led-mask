@@ -78,6 +78,7 @@ def start():
 def animate():
     animation_condictional.condiction = False
     
+    time.sleep(2)
 
     data = request.get_json()
     animated_image = AnimatedImage(data["delay"], data["frames"])
