@@ -5,6 +5,7 @@ import threading
 from pins import Pins
 from pixels import Pixels
 from matrix import Matrix
+from condictional import Condictional
 
 width, hight = 64, 32
 
@@ -12,13 +13,14 @@ pins = Pins(red0=19, red1=26, green0=11, green1=5, blue0=6, blue1=13, a=25, b=8,
 pixels = Pixels(width=width, hight=hight)
 matrix = Matrix(pixels, pins)
 
-a = True
+condictional = Condictional()
 
-threading.Thread(target=matrix.run, args=(a,)).start()
+main_thread = threading.Thread(target=matrix.run, args=(condictional,))
+main_thread.start()
 
 app = Flask(__name__)
 
-@app.get("/test")
+@app.get("/test/")
 def test():
     def thread():
         for w in range(width):
@@ -26,12 +28,44 @@ def test():
             for h in range(hight):
                 pixels.set_pixel(w, h, w%8)
     threading.Thread(target=thread).start()
-    return {"succes": True}
+    return {"succes": True}, 200
 
-@app.post("/set")
-def test():
+@app.patch("/set/")
+def set():    
     data = request.get_json()
-    def thread():
-        pixels.set_pixel(data["x"], data["y"], data["color"])
-    threading.Thread(target=thread).start()
-    return {"succes": True}
+    pixels.set_pixel(int(data["x"]), int(data["y"]), int(data["color"]))
+    return {"succes": True}, 200
+
+@app.delete("/clear/")
+def clear():
+    pixels.clear()
+    return {"sucess": True}, 200
+
+@app.put("/set-all/")
+def set_all():
+    data = request.get_json()
+    pixels.set_all(data["pixels"])
+    return {"succes": True}, 200
+
+@app.get("/get-pixel")
+def get_pixel():
+    data = request.get_json()
+    return pixels.get_pixel(int(data["x"]), int(data["y"])), 200
+
+@app.get("/get-pixels")
+def get_pixels():
+    return pixels.get_pixels, 200
+
+@app.get("/kill/")
+def kill():
+    condictional.condiction = False
+    return {"succes": True}, 200
+
+@app.get("/start/")
+def start():
+    condictional.condiction = True
+    if main_thread.is_alive():
+        return {"sucess": False, "wasAlive": True}, 500
+    
+    main_thread.start()
+    return {"sucess": True, "wasAlive": False}, 200

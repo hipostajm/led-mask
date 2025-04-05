@@ -1,5 +1,6 @@
 from pixels import Pixels
 from pins import Pins
+from condictional import Condictional
 import RPi.GPIO as GPIO
 import time
 
@@ -60,7 +61,7 @@ class Matrix:
             GPIO.output(self.pins.oe, 0)
             time.sleep(self.delay)
     
-    def run(self, condiction = True):
-        while condiction:
+    def run(self, condiction: Condictional):
+        while condiction.condiction:
             self._refresh()
 
