@@ -10,7 +10,7 @@ class AnimatedImage():
     def animate(self, pixels: Pixels, condictional: Condictional):
         while condictional.condiction:
             for frame in self.frames:
-                time.sleep(self.delay)
                 if not condictional.condiction:
                     break     
                 pixels.set_all(frame)
+                time.sleep(self.delay)

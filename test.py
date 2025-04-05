@@ -44,5 +44,5 @@ pixels3 = flatter(pixels3, width, height)
 # print(*pixels, sep='\n')
 
 # requests.put(url="http://192.168.1.41:5000/set-all/", json={"pixels": pixels, "delay": 1})
-requests.put(url="http://192.168.1.41:5000/animate/", json={"frames": [pixels2, pixels3], "delay": 1})
-# requests.put(url="http://192.168.1.41:5000/animate/", json={"frames": [pixels], "delay": 1})
+# requests.put(url="http://192.168.1.41:5000/animate/", json={"frames": [pixels2, pixels3], "delay": 1})
+requests.put(url="http://192.168.1.41:5000/animate/", json={"frames": [pixels], "delay": 1})

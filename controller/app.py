@@ -20,6 +20,8 @@ animation_condictional = Condictional()
 main_thread = threading.Thread(target=matrix.run, args=(condictional,))
 main_thread.start()
 
+animated_image = AnimatedImage([], 1)
+
 
 app = Flask(__name__)
 
@@ -81,7 +83,8 @@ def animate():
     time.sleep(2)
 
     data = request.get_json()
-    animated_image = AnimatedImage(data["delay"], data["frames"])
+    animated_image.delay = data["delay"]
+    animated_image.frames = data["frames"]
     animation_condictional.condiction = True
     animation_thread = threading.Thread(target=animated_image.animate, args=(pixels, animation_condictional))
     
