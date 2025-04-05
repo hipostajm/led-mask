@@ -15,11 +15,11 @@ pixels = Pixels(width=width, height=height)
 matrix = Matrix(pixels, pins)
 
 condictional = Condictional()
+animation_condictional = Condictional()
 
 main_thread = threading.Thread(target=matrix.run, args=(condictional,))
 main_thread.start()
 
-current_animation: list[Condictional] = []
 
 app = Flask(__name__)
 
@@ -46,9 +46,7 @@ def clear():
 
 @app.put("/set-all/")
 def set_all():
-    if not current_animation:
-        current_animation[0].condiction = False
-        current_animation = []
+    animation_condictional.condiction = False
 
     data = request.get_json()
     pixels.set_all(data["pixels"])
@@ -78,18 +76,16 @@ def start():
 
 @app.put("/animate/")
 def animate():
-    if not current_animation:
-        current_animation[0].condiction = False
-        current_animation = []
+    animation_condictional.condiction = False
+    
 
     data = request.get_json()
     animated_image = AnimatedImage(data["delay"], data["frames"])
-    animeted_image_condictional = Condictional()
-    animation_thread = threading.Thread(target=animated_image.animate, args=(pixels, animeted_image_condictional))
-    current_animation.append(animeted_image_condictional)
-
+    animation_condictional.condiction = True
+    animation_thread = threading.Thread(target=animated_image.animate, args=(pixels, animation_condictional))
+    
     animation_thread.start()
-    return {"sucess": True},
+    return {"sucess": True}, 200
 
 @app.get("/size/")
 def size():
