@@ -1,9 +1,10 @@
 import math
 from PIL import Image
 import requests
-im = Image.open('snes.png').convert("RGB")
-im2 = Image.open('test.png').convert("RGB")
-im3 = Image.open('tesssst-export.png').convert("RGB")
+
+im = Image.open('./assets/image.png').convert("RGB")
+im2 = Image.open('./assets/test.png').convert("RGB")
+im3 = Image.open('./assets/tesssst-export.png').convert("RGB")
 
 pixels = list(im.getdata())
 pixels2 = list(im2.getdata())
@@ -42,7 +43,7 @@ pixels = flatter(pixels, width, height)
 pixels2 = flatter(pixels2, width, height)
 pixels3 = flatter(pixels3, width, height)
 # print(*pixels, sep='\n')
-
-# requests.put(url="http://192.168.1.41:5000/set-all/", json={"pixels": pixels, "delay": 1})
+1
+requests.put(verify=False,url="https://192.168.1.41:5000/set-all/", json={"pixels": pixels, "delay": 1})
 # requests.put(url="http://192.168.1.41:5000/animate/", json={"frames": [pixels2, pixels3], "delay": 1})
-requests.put(url="http://192.168.1.41:5000/animate/", json={"frames": [pixels], "delay": 1})
+# requests.put(url="http://192.168.1.41:5000/animate/", json={"frames": [pixels], "delay": 1})
