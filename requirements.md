@@ -1,4 +1,4 @@
-# List of requirements for liblarys
+# List of requierd liblarys
 
 ## For server
 
