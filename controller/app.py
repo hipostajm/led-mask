@@ -35,18 +35,18 @@ def test():
     threading.Thread(target=thread).start()
     return {"succes": True}, 200
 
-@app.patch("/set/")
+@app.post("/set/")
 def set():    
     data = request.get_json()
     pixels.set_pixel(int(data["x"]), int(data["y"]), int(data["color"]))
     return {"succes": True}, 200
 
-@app.delete("/clear/")
+@app.post("/clear/")
 def clear():
     pixels.clear()
     return {"sucess": True}, 200
 
-@app.put("/set-all/")
+@app.post("/set-all/")
 def set_all():
     animation_condictional.condiction = False
 
@@ -76,7 +76,7 @@ def start():
     main_thread.start()
     return {"sucess": True}, 200
 
-@app.put("/animate/")
+@app.post("/animate/")
 def animate():
     animation_condictional.condiction = False
     
