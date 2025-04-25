@@ -36,4 +36,4 @@ Server also runs a http flask server which functions as a backend and frontend f
 
 - For static images you need to send a http post request on /set-all/ endpoint with request containg key pixels with value as matrix of tupple of 3 ints (from 0 to 7) (list[list[tupple[int, int, int]]])
 
-- For animated images you need to send a http post request on /animate/ with keys delay with value of number. The delay will be a time between the frames are presented. The secound key will be frames contaning a list of matrix'es the same as for static images
+- For animated images you need to send a http post request on /animate/ with key frames which is a list of maps contaning keys duration which is a number where 1 is 1s of delay and with another key frame with value of matrix the same as for static images.
