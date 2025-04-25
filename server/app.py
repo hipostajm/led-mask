@@ -14,17 +14,17 @@ path.append("")
 
 
 IP = "https://192.168.1.41:5000"
-height, width = requests.get(url=IP+"/size/", verify=False).json().values()
+height, width = 32, 64 #requests.get(url=IP+"/size/", verify=False).json().values()
 
 app = Flask(__name__)
 
 UPLOAD_FOLDER = './uploads/'
-ALLOWED_EXTENSIONS = {"gif", "jpg", "png", "webp"}
+ALLOWED_EXTENSIONS = {"jpg", "png", "webp"}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-def allowd_file(filename: str):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def allowd_file(filename: str, allowed_extensions):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 @app.get("/image/")
 def get_image():
@@ -39,14 +39,33 @@ def post_image():
     
     file = request.files["image"]
 
-    if file and allowd_file(file.filename):
+    if file and allowd_file(file.filename, ALLOWED_EXTENSIONS):
         filename = secure_filename(file.filename)
         image = Image.open(BytesIO(file.stream.read())).convert("RGBA")
-        image = resize_image(image)
+        image = resize_image(image, width, height)
         image = flat_image(image, width, height)
 
-        send_image({"pixels": image}, IP, "/set-all/", requests.put)
+        requests.post(json={"image": image}, url=IP+"/set-all/")
 
         return redirect("/image/"), 200
+    
+    elif file and allowd_file(file.filename, ("gif",)):
+        image = Image.open(BytesIO(file.stream.read()))
+        
+        frames = []   
+
+        try:
+            while 1:
+                image.seek(image.tell() + 1)
+                duration = image.info["duration"]
+                image.convert("RGBA")
+                frame = flat_image(resize_image(image, width, height), width, height)
+                frames.append({"duration": duration, "frame": frame})
+        except EOFError:
+                pass
+        
+        requests.post(url=IP+"/animate/", json={"frames": frames})
+        return redirect("/image/"),200
+
     else:
         return "some problem happend", 400 
