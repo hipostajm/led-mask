@@ -9,22 +9,25 @@ from io import BytesIO
 from resize_image import resize_image
 from flat_image import flat_image
 from send_image import send_image
+from AppApiConnector import AppApiConnector
+from AppController import AppController 
+from AppController import NoImageSendedException
+from AppController import WrongExtensionsOfImageException
 
 path.append("")
 
 
-IP = "https://192.168.1.41:5000"
-height, width = 32, 64 #requests.get(url=IP+"/size/", verify=False).json().values()
+IP = "http://192.168.1.41:5000"
+height, width = requests.get(url=IP+"/size/", verify=False).json().values()
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = './uploads/'
-ALLOWED_EXTENSIONS = {"jpg", "png", "webp"}
+ALLOWED_EXTENSIONS = {"jpg", "png", "webp", 'jpeg'}
+ANIMATED_ALLOWED_EXTESIONS = {"gif",}
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-def allowd_file(filename: str, allowed_extensions):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+appApiConnector = AppApiConnector()
+appController = AppController(IP, ALLOWED_EXTENSIONS, ANIMATED_ALLOWED_EXTESIONS, width, height, appApiConnector) 
+ 
 
 @app.get("/image/")
 def get_image():
@@ -34,38 +37,56 @@ def get_image():
 @app.post("/image/")
 def post_image():
 
-    if "image" not in request.files:
-        return "No image was sended ;("
+    try:
+        appController.post_image(request)
+        return app.redirect("/image/"), 200
+    except NoImageSendedException:
+        return "No image was sended ;(", 400
+    except WrongExtensionsOfImageException:
+        return "Wrong Extesion of image ;(", 400
+    except:
+        return "some error happend idk what :3c", 500
+
+
+
+    # if "image" not in request.files:
+    #     return "No image was sended ;("
     
-    file = request.files["image"]
+    # file = request.files["image"]
 
-    if file and allowd_file(file.filename, ALLOWED_EXTENSIONS):
-        filename = secure_filename(file.filename)
-        image = Image.open(BytesIO(file.stream.read())).convert("RGBA")
-        image = resize_image(image, width, height)
-        image = flat_image(image, width, height)
+    # if file and allowd_file(file.filename, ALLOWED_EXTENSIONS):
+    #     filename = secure_filename(file.filename)
+    #     image = Image.open(BytesIO(file.stream.read())).convert("RGBA")
+    #     image = resize_image(image, width, height)
+    #     image = flat_image(image, width, height)
 
-        requests.post(json={"image": image}, url=IP+"/set-all/")
+    #     requests.post(json={"image": image}, url=IP+"/set-all/")
 
-        return redirect("/image/"), 200
+    #     return redirect("/image/"), 200
     
-    elif file and allowd_file(file.filename, ("gif",)):
-        image = Image.open(BytesIO(file.stream.read()))
+    # elif file and allowd_file(file.filename, ("gif",)):
+    #     image = Image.open(BytesIO(file.stream.read()))
         
-        frames = []   
+    #     frames = []   
 
-        try:
-            while 1:
-                image.seek(image.tell() + 1)
-                duration = image.info["duration"]
-                image.convert("RGBA")
-                frame = flat_image(resize_image(image, width, height), width, height)
-                frames.append({"duration": duration, "frame": frame})
-        except EOFError:
-                pass
+
+    #     image_copy = image.copy().convert("RGBA")
+    #     first_frame_duration = image_copy.info["duration"]
+    #     first_frame = flat_image(resize_image(image_copy, width, height), width, height)
+    #     frames.append({"duration": first_frame_duration/1000, "frame": first_frame})
+
+    #     try:
+    #         while 1:
+    #             image.seek(image.tell() + 1)
+    #             duration = image.info["duration"]
+    #             image.convert("RGBA")
+    #             frame = flat_image(resize_image(image, width, height), width, height)
+    #             frames.append({"duration": duration/1000, "frame": frame})
+    #     except EOFError:
+    #             pass
         
-        requests.post(url=IP+"/animate/", json={"frames": frames})
-        return redirect("/image/"),200
+    #     requests.post(url=IP+"/animate/", json={"frames": frames})
+    #     return redirect("/image/"),200
 
-    else:
-        return "some problem happend", 400 
+    # else:
+    #     return "some problem happend", 400 

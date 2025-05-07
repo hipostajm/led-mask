@@ -1,2 +1,3 @@
 from app import app
-app.run(host="0.0.0.0",ssl_context="adhoc")
+# app.debug = True
+app.run(host="0.0.0.0",port=5000)

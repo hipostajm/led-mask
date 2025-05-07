@@ -18,33 +18,39 @@ def resize_image(img: Image, new_width = 64, new_height = 32):
             if x+1 >= width:
                 continue
 
-            curvecure_r = (img[y][x+1][0]-img[y][x][0])/(x_scaling_factor-1)
-            curvecure_g = (img[y][x+1][1]-img[y][x][1])/(x_scaling_factor-1)
-            curvecure_b = (img[y][x+1][2]-img[y][x][2])/(x_scaling_factor-1)
+            first_pixel = img[y][x]
+            secound_pixel = img[y][x+1]
+
+            curvecure_r = (secound_pixel[0]-first_pixel[0])/(x_scaling_factor-1)
+            curvecure_g = (secound_pixel[1]-first_pixel[1])/(x_scaling_factor-1)
+            curvecure_b = (secound_pixel[2]-first_pixel[2])/(x_scaling_factor-1)
 
             if y+1 >= height:
                 continue
+            
+            current_y = int(y*y_scaling_factor)
+            current_x = int(x*x_scaling_factor)
 
             for xi in range(ceil(x_scaling_factor)):
-                if len(img[y][x]) == 4 and img[y][x][3] == 0:
-                    new_img[int(y*y_scaling_factor)][xi+int(x*x_scaling_factor)] = (0,0,0)
+                if len(first_pixel) == 4 and first_pixel[3] == 0:
+                    new_img[current_y][xi+current_x] = (0,0,0)
                 else:
-                    current_pixel = img[y][x]
-                    new_img[int(y*y_scaling_factor)][xi+int(x*x_scaling_factor)] = (
-                                                            int(curvecure_r*xi+current_pixel[0])
-                                                            ,int(curvecure_g*xi+current_pixel[1])
-                                                            ,int(curvecure_b*xi+current_pixel[2])
+                    new_img[current_y][xi+current_x] = (
+                                                            int(curvecure_r*xi+first_pixel[0])
+                                                            ,int(curvecure_g*xi+first_pixel[1])
+                                                            ,int(curvecure_b*xi+first_pixel[2])
                                                             )
             
             curvecure_r = (img[y+1][x+1][0]-img[y+1][x][0])/(x_scaling_factor-1)
             curvecure_g = (img[y+1][x+1][1]-img[y+1][x][1])/(x_scaling_factor-1)
             curvecure_b = (img[y+1][x+1][2]-img[y+1][x][2])/(x_scaling_factor-1)
 
+            current_pixel = img[y+1][x]
+
             for xi in range(ceil(x_scaling_factor)):
-                if len(img[y][x]) == 4 and img[y][x][3] == 0:
+                if len(first_pixel) == 4 and first_pixel[3] == 0:
                     new_img[int(y*y_scaling_factor)][xi+int(x*x_scaling_factor)] = (0,0,0)
                 else:
-                    current_pixel = img[y+1][x]
                     new_img[int((y+1)*y_scaling_factor)-1][xi+int(x*x_scaling_factor)] = (
                                                             int(curvecure_r*xi+current_pixel[0])
                                                             ,int(curvecure_g*xi+current_pixel[1])
