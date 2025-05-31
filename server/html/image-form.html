@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>led mask</title>
+    <style>
+        form{
+            display: flex;
+            flex-direction: column;
+        }
+
+        input[type=file]{
+            display: none;
+        }
+
+        .upload{
+            background-color: lightslategray;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            width: 100px;
+            border: 2px dotted black;
+        }
+
+        .upload:hover{
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="file-upload" class="upload">Image</label>
+        
+        <br>
+        
+        <input type="file" id="file-upload" name="image" required>
+        <label for="">Hue: <input type="range" name="hue" max="360" value="0"></label>
+        <label for="">Saturation: <input type="range" name="saturation" min="-100" max="100" value="0"></label>
+        <label for="">Value: <input type="range" name="value" min="-100" max="100" value="0"></label>
+        
+        <br>
+
+        <label for=""> 
+            None: <input type="radio" name="rotate" id="" value="0" checked="checked">
+            90 degress: <input type="radio" name="rotate" id="" value="1">
+            180 degress: <input type="radio" name="rotate" id="" value="2">
+            270 degress: <input type="radio" name="rotate" id="" value="3">
+        </label>
+        <br>
+        <label>
+        Flip horizontal: <input type="checkbox" name="flip-horizontal" id="">
+        <br>
+        Flip vertical: <input type="checkbox" name="flip-vertical" id="">
+        </label>    
+        <br>
+        
+        <input type="submit" value="submit">
+    </form>
+</body>
+</html>
