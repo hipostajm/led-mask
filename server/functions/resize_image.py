@@ -6,10 +6,6 @@ def resize_image(matrix: list, new_width = 64, new_height = 32):
     height = len(matrix)
     width = len(matrix[0])
 
-    # width, height = matrix.size
-    # matrix = list(matrix.getdata())
-    # matrix = [matrix[i * width:(i + 1) * width] for i in range(height)]
-
     x_scaling_factor = new_width/(width-1)
     y_scaling_factor = new_height/(height-1)
 
