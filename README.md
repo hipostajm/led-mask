@@ -1,5 +1,4 @@
-# Led mask
-Led mask for cosplaying perpuse. 
+# Led display 
 
 This repo contains:
 - http server for micro controller 
